@@ -21,6 +21,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var battery = Battery()
 
     func applicationWillFinishLaunching(_ notification: Notification) {
+        NotificationCenter.default.addObserver(self, selector: #selector(didChangeScreenParameters(_:)), name: NSApplication.didChangeScreenParametersNotification, object: nil)
+
         window = NSWindow(contentRect: CGRect(x: 0, y: 0, width: 500, height: 500), styleMask: .borderless, backing: .buffered, defer: false)
         window.isOpaque = true
         window.setFrame(NSScreen.main!.frame.divided(atDistance: 20, from: .maxYEdge).slice, display: true)
@@ -67,6 +69,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationWillTerminate(_ notification: Notification) {
         _ = battery.close()
+    }
+
+    @objc
+    func didChangeScreenParameters(_ notification: Notification) {
+        window.setFrame(NSScreen.main!.frame.divided(atDistance: 20, from: .maxYEdge).slice, display: true)
     }
 }
 
